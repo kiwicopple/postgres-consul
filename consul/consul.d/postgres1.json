@@ -1,0 +1,29 @@
+{
+  "service": {
+    "id": "cluster-one",
+    "name": "cluster-one",
+    "checks": [
+      {
+        "id": "cluster-one-isready",
+        "name": "PG is ready",
+        "args": [
+          "/usr/local/bin/consul.d/pg_check.sh",
+          "cluster-one",
+          "5432",
+          "postgres",
+          "postgres",
+          "postgres"
+        ],
+        "interval": "3s",
+        "timeout": "10s"
+      }
+    ]
+  },
+  "watches": [
+    {
+      "type": "checks",
+      "service": "cluster-one",
+      "args": ["/usr/local/bin/consul.d/handle_state_change.sh", "cluster-one"]
+    }
+  ]
+}

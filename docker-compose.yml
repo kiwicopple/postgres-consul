@@ -1,0 +1,54 @@
+
+version: '3'
+
+services:
+
+  consul-server: 
+    container_name: postgres-consul
+    build: 
+      context: ./consul
+      dockerfile: Dockerfile
+    networks:
+      - postgres-ha
+    ports:
+      - "8500:8500" # UI
+      - "8600:8600/udp"
+    command: "agent -server -bootstrap-expect 1 -ui -client 0.0.0.0 -config-dir /usr/local/bin/consul.d -enable-local-script-checks"
+
+  cluster-one:
+    container_name: cluster-one
+    image: supabase/postgres:14.1.0.21
+    networks:
+      - postgres-ha
+    restart: unless-stopped
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_PASSWORD: postgres
+    
+  cluster-two:
+    container_name: cluster-two
+    image: supabase/postgres:14.1.0.21
+    networks:
+      - postgres-ha
+    restart: unless-stopped
+    ports:
+      - 5433:5432
+    environment:
+      POSTGRES_PASSWORD: postgres
+    
+    
+  cluster-three:
+    container_name: cluster-three
+    image: supabase/postgres:14.1.0.21
+    networks:
+      - postgres-ha
+    restart: unless-stopped
+    ports:
+      - 5434:5432
+    environment:
+      POSTGRES_PASSWORD: postgres
+    
+
+networks:
+  postgres-ha:

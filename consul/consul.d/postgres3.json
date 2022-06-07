@@ -1,0 +1,32 @@
+{
+  "service": {
+    "id": "cluster-three",
+    "name": "cluster-three",
+    "checks": [
+      {
+        "id": "cluster-three-isready",
+        "name": "PG is ready",
+        "args": [
+          "/usr/local/bin/consul.d/pg_check.sh",
+          "cluster-three",
+          "5432",
+          "postgres",
+          "postgres",
+          "postgres"
+        ],
+        "interval": "3s",
+        "timeout": "10s"
+      }
+    ]
+  },
+  "watches": [
+    {
+      "type": "checks",
+      "service": "cluster-three",
+      "args": [
+        "/usr/local/bin/consul.d/handle_state_change.sh",
+        "cluster-three"
+      ]
+    }
+  ]
+}
